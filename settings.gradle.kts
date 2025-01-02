@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "RetrofiResponseCustom"
+rootProject.name = "RetrofitResponseCustom"
 include(":app")
  

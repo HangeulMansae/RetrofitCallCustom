@@ -1,4 +1,4 @@
-package com.hangeulmansae.retrofiresponsecustom
+package com.hangeulmansae.retrofitresponsecustom
 
 import org.junit.Test
 

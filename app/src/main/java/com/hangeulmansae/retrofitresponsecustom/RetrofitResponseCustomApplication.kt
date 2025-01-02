@@ -1,18 +1,20 @@
-package com.hangeulmansae.retrofiresponsecustom
+package com.hangeulmansae.retrofitresponsecustom
 
 import android.app.Application
 import com.google.gson.GsonBuilder
-import com.hangeulmansae.retrofiresponsecustom.retrofit.TestApi
+import com.hangeulmansae.retrofitresponsecustom.retrofit.CustomCallAdapterFactory
+import com.hangeulmansae.retrofitresponsecustom.retrofit.NullOnEmptyConverterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
-class RetrofitResponseCustomApplication: Application() {
+const val SERVER_URL = BuildConfig.SERVER_IP
 
-    companion object{
+class RetrofitResponseCustomApplication : Application() {
+
+    companion object {
         lateinit var retrofit: Retrofit
     }
 
@@ -25,9 +27,8 @@ class RetrofitResponseCustomApplication: Application() {
 
         val gsonConverterFactory = GsonConverterFactory.create(gson)
 
-        val scalarsConverterFactory = ScalarsConverterFactory.create()
-
-        val httpLoggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+        val httpLoggingInterceptor =
+            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
         val client: OkHttpClient = OkHttpClient.Builder()
             .readTimeout(5000, TimeUnit.MILLISECONDS)
@@ -36,11 +37,12 @@ class RetrofitResponseCustomApplication: Application() {
             .build()
 
         retrofit = Retrofit.Builder()
-        .baseUrl("https://jsonplaceholder.typicode.com/todos/")
-        .addConverterFactory(scalarsConverterFactory)
-        .addConverterFactory(gsonConverterFactory)
-        .client(client)
-        .build()
+            .baseUrl(SERVER_URL)
+            .addConverterFactory(NullOnEmptyConverterFactory())
+            .addConverterFactory(gsonConverterFactory)
+            .addCallAdapterFactory(CustomCallAdapterFactory())
+            .client(client)
+            .build()
     }
 
 }
